@@ -1,0 +1,77 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f1f1f1;
+}
+
+.game-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button.disabled {
+    opacity: 60%;
+}
+
+.character-info, .location-info, .actions, .log {
+    margin-bottom: 20px;
+}
+
+.character-info .inventory-wrapper {
+    display: flex;
+    gap: 5px;
+}
+
+.character-info .inventory-wrapper .js-character-inventory div{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.character-info .inventory-wrapper .js-character-inventory button {
+    margin-right: 10px;
+    background-color: #003879;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.character-info .inventory-wrapper .js-character-inventory button:hover {
+    background-color: #0056b3;
+}
+
+.actions button {
+    padding: 10px;
+    margin-right: 10px;
+    background-color: #3382d6;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.select-location {
+    background-color: #f9f9f9;
+    padding: 10px;
+    margin-top: 20px;
+    border-radius: 5px;
+}
+
+.actions button:hover {
+    background-color: #0056b3;
+}
+
+.log {
+    padding: 10px;
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    min-height: 100px;
+    overflow-y: auto;
+    height: 200px;
+    
+}
