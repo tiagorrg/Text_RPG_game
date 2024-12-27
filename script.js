@@ -45,7 +45,7 @@ const locations = [
                 power: 10,
                 function () {
                     characterStats.defense += this.power
-                    addLogText(`Вы используете зелье регенирации, ваше здоровье повышается на ${this.power}`)
+                    addLogText(`Вы экипируете щит', ваша защита с ним больше на ${this.power}`)
                 }
             }
         ]
@@ -232,6 +232,7 @@ const updateCharacterInfo = (characterStats) => {
         const characterHealth = document.getElementsByClassName('js-character-health')[0]
         characterHealth.innerHTML = `Health: 0`
 
+        addLogText('Вы погибли')
         alert('К сожалению ваш персонаж погиб')
 
         var buttons = document.getElementsByTagName("button");
@@ -259,8 +260,6 @@ const setCurrentLocation = (locations) => {
     const currentLocation = document.getElementsByClassName('js-location-name')[0]
 
     currentLocation.innerHTML = locations[selectRandomEvent(locations)].location
-
-
 }
 
 const setStartLocation = (startLocation) => {
@@ -298,7 +297,7 @@ const takeStartInfo = (characterStats) => {
 }
 
 const getItem = (characterStats, foundItem) => {
-    if (explorePossibility) {
+    if (explorePossibility && !currentEnemy.name) {
         characterStats.inventory.push(foundItem)
 
         addLogText('Вы подобрали предмет')
@@ -310,7 +309,6 @@ const getItem = (characterStats, foundItem) => {
         }
 
         explorePossibility = false
-
         return
     }
 
@@ -336,7 +334,7 @@ document.getElementsByClassName('js-explore-btn')[0].addEventListener('click', (
     }
 
     if (!explorePossibility){
-        characterStats.health = characterStats.health - 5
+        characterStats.health -= 5
         addLogText('Больше ничего найти не удается. Вы впустую тратите время и теряете 5 единиц здоровья')
         updateCharacterInfo(characterStats)
         return
@@ -405,7 +403,13 @@ document.getElementsByClassName('js-escape-btn')[0].addEventListener('click', ()
             }
         }
         updateCharacterInfo(characterStats)
+        explorePossibility = true
         return
+    }
+
+    if (collectBtnListener) {
+        document.getElementsByClassName('js-collect-btn')[0].removeEventListener('click', collectBtnListener);
+        collectBtnListener = null;
     }
 
     changeCurrentLocation(locations)
