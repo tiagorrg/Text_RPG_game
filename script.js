@@ -6,7 +6,7 @@ const characterStats = {
         {
             name: 'Regeneration Potion lvl 1',
             power: 10,
-            function () {
+            effect() {
                 characterStats.health += this.power
                 addLogText(`Вы используете зелье регенирации, ваше здоровье повышается на ${this.power}`)
             }
@@ -18,6 +18,7 @@ const currentEnemy = {}
 
 const locations = [
     {
+        name: 'Forest',
         location: 'В данный момент вы находитесь в лесу. Вокруг вас растут деревья.',
         enemies: [
             {
@@ -35,7 +36,7 @@ const locations = [
             {
                 name: 'Regeneration Potion lvl 1',
                 power: 10,
-                function () {
+                effect() {
                     characterStats.health += this.power
                     addLogText(`Вы используете зелье регенирации, ваше здоровье повышается на ${this.power}`)
                 }
@@ -43,7 +44,7 @@ const locations = [
             {
                 name: 'Shield lvl 2',
                 power: 10,
-                function () {
+                effect() {
                     characterStats.defense += this.power
                     addLogText(`Вы экипируете щит', ваша защита с ним больше на ${this.power}`)
                 }
@@ -51,6 +52,7 @@ const locations = [
         ]
     },
     {
+        name: 'Mountain',
         location: 'Вы находитесь на вершине горы. Видно облака ниже вас.',
         enemies: [
             {
@@ -68,7 +70,7 @@ const locations = [
             {
                 name: 'Iron Sword',
                 power: 10,
-                function () {
+                effect() {
                     characterStats.attack += this.power
                     addLogText(`Вы экипируете железный меч, с ним ваш урон больше на ${this.power}`)
                 }
@@ -76,7 +78,7 @@ const locations = [
             {
                 name: 'Regeneration Potion lvl 2',
                 power: 20,
-                function () {
+                effect() {
                     characterStats.health += this.power
                     addLogText(`Вы используете зелье регенирации, ваше здоровье повышается на ${this.power}`)
                 }
@@ -84,6 +86,7 @@ const locations = [
         ]
     },
     {
+        name: 'Ship',
         location: 'Вы на корабле, плавающем по бурному морю.',
         enemies: [
             {
@@ -101,7 +104,7 @@ const locations = [
             {
                 name: 'Life Jacket',
                 power: 5,
-                function () {
+                effect() {
                     characterStats.defense += this.power
                     addLogText(`Вы экипируете спасательный желет, с ним ваша защита больше на ${this.power}`)
                 }
@@ -109,7 +112,7 @@ const locations = [
             {
                 name: 'Rum',
                 power: 5,
-                function () {
+                effect() {
                     characterStats.attack += this.power
                     addLogText(`Вы выпиваете до дна ром, вас переполняет сила, атака увеличена на ${this.power}`)
                 }
@@ -117,6 +120,7 @@ const locations = [
         ]
     },
     {
+        name: 'Snow mountain',
         location: 'Вы на заснеженном горном плато. Ветер сильно воет.',
         enemies: [
             {
@@ -134,7 +138,7 @@ const locations = [
             {
                 name: 'Warmth Amulet',
                 power: 10,
-                function () {
+                effect() {
                     characterStats.health += this.power
                     addLogText(`Вы одеваете амулет тепла, с ним ваше здоровье больше на ${this.power}`)
                 }
@@ -142,52 +146,23 @@ const locations = [
             {
                 name: 'Felt boots',
                 power: 15,
-                function () {
+                effect() {
                     characterStats.defense += this.power
                     addLogText(`Вы экипируете валенки, с ними ваша защита больше аж на ${this.power}`)
                 }
             }
         ]
-    }   
+    }
 ]
 
 let explorePossibility = true
+let collectBtnListener
 
-const currentLocation = {
-    location: 'В данный момент вы находитесь в лесу. Вокруг вас растут деревья.',
-    enemies: [
-        {
-            name: 'Goblin',
-            attack: 10,
-            health: 25
-        },
-        {
-            name: 'Wolf',
-            attack: 15,
-            health: 15
-        },
-        {
-            name: 'Nobody'
-        }
-    ],
-    items: [
-        {
-            name: 'Regeneration Potion lvl 1',
-            power: 10,
-            function () {
-                characterStats.health += this.power
-                addLogText(`Вы используете зелье регенирации, ваше здоровье повышается на ${this.power}`)
-            }
-        },
-        {
-            name: 'Shield lvl 1',
-            power: 10,
-            function () {
-                characterStats.defense += this.power
-                addLogText(`Вы экипируете щит, с ним ваша защита больше на ${this.power}`)
-            }
-        }
-    ]
+const currentLocation = locations[0]
+
+
+const showModal = () => {
+    document.getElementById('myModal').style.display = 'flex';
 }
 
 const selectRandomEvent = (array) => {
@@ -197,10 +172,12 @@ const selectRandomEvent = (array) => {
 }
 
 const selectCharacterName = () => {
-    let characterName = prompt('Введите желаемое имя персонажа')
+    let characterName = document.getElementById('userInput').value
 
     const containerCharacterName = document.getElementsByClassName('js-character-name')[0]
     containerCharacterName.innerHTML = characterName
+
+    document.getElementById('myModal').style.display = 'none';
 }
 
 const updateInventoryInfo = (characterStats) => {
@@ -212,15 +189,16 @@ const updateInventoryInfo = (characterStats) => {
     itemsInInventory.forEach(item => {
         const createButtonItem = document.createElement('button')
         createButtonItem.innerHTML = item.name
-        
+
         createButtonItem.addEventListener('click', () => {
-            item.function.call(item)
+            item.effect.call(item)
 
             delete itemsInInventory[itemsInInventory.indexOf(item)]
 
             updateCharacterInfo(characterStats)
             updateInventoryInfo(characterStats)
         })
+
         itemsButtonWrapper.appendChild(createButtonItem)
     });
 
@@ -238,7 +216,7 @@ const updateCharacterInfo = (characterStats) => {
         var buttons = document.getElementsByTagName("button");
         for (var i = 0; i < buttons.length; i++) {
             buttons[i].disabled = true;
-            buttons[i].classList.add( 'disabled')
+            buttons[i].classList.add('disabled')
         }
 
         return
@@ -273,7 +251,7 @@ const setStartLocation = (startLocation) => {
 const spawnEnemy = (enemies) => {
     const enemy = enemies[selectRandomEvent(enemies)]
 
-    const {name, health, attack} = enemy
+    const { name, health, attack } = enemy
 
     addLogText(`Перед тобой появляется ${name} со здоровьем ${health} и уроном ${attack}`)
 
@@ -282,22 +260,25 @@ const spawnEnemy = (enemies) => {
     currentEnemy.health = health
 }
 
-const addLogText = (text) => {
+const addLogText = (text, color) => {
     const containerLog = document.getElementById('log')
 
-    containerLog.innerHTML += `<p>${text}</p>`
+    if (color){
+        containerLog.innerHTML += `<p style='color:${color}'>${text}</p>`
+    } else {
+        containerLog.innerHTML += `<p style='color:black;'>${text}</p>`
+    }
 
     containerLog.scrollTo(0, containerLog.scrollHeight)
 }
 
 const takeStartInfo = (characterStats) => {
-    selectCharacterName()
     updateCharacterInfo(characterStats)
     setStartLocation(locations[0])
 }
 
 const getItem = (characterStats, foundItem) => {
-    if (explorePossibility && !currentEnemy.name) {
+    if (!currentEnemy.name) {
         characterStats.inventory.push(foundItem)
 
         addLogText('Вы подобрали предмет')
@@ -324,42 +305,48 @@ const changeCurrentLocation = (locations) => {
 
     explorePossibility = true
 
+    addLogText(`Вы попадаете в ${currentLocation.name}`, 'green')
+
     setStartLocation(currentLocation)
 }
 
 document.getElementsByClassName('js-explore-btn')[0].addEventListener('click', () => {
-    if (currentEnemy.name){
+    if (currentEnemy.name) {
         addLogText('Перед вами противник, исследовать локацию не получится')
         return
     }
 
-    if (!explorePossibility){
+    console.log(explorePossibility)
+
+    if (!explorePossibility) {
         characterStats.health -= 5
         addLogText('Больше ничего найти не удается. Вы впустую тратите время и теряете 5 единиц здоровья')
         updateCharacterInfo(characterStats)
         return
     }
 
+    explorePossibility = false
+
     const foundItem = currentLocation.items[selectRandomEvent(currentLocation.items)]
 
     addLogText(`Вы нашли ${foundItem.name}. Хотите взять?`)
-    
+
     collectBtnListener = () => getItem(characterStats, foundItem);
     document.getElementsByClassName('js-collect-btn')[0].addEventListener('click', collectBtnListener)
 })
 
 document.getElementsByClassName('js-fight-btn')[0].addEventListener('click', () => {
-    if (!currentEnemy.name){
+    if (!currentEnemy.name) {
         addLogText('Атаковать некого')
         return
     }
 
-    if (currentEnemy.health > 0){
+    if (currentEnemy.health > 0) {
         currentEnemy.health = currentEnemy.health - characterStats.attack
         addLogText(`Вы атакуете ${currentEnemy.name} на ${characterStats.attack}, его здоровье становится ${currentEnemy.health > 0 ? currentEnemy.health : 0}`)
     }
 
-    if (currentEnemy.health <= 0){
+    if (currentEnemy.health <= 0) {
         addLogText(`${currentEnemy.name} мертв`)
 
         Object.keys(currentEnemy).forEach(key => delete currentEnemy[key])
@@ -369,31 +356,33 @@ document.getElementsByClassName('js-fight-btn')[0].addEventListener('click', () 
 
     characterStats.health = characterStats.health - currentEnemy.attack + characterStats.defense
     updateCharacterInfo(characterStats)
-    addLogText(`${currentEnemy.name} атакует вас на ${currentEnemy.attack}, но вы беспоследственно поглатили ${characterStats.defense}`)
+    addLogText(`${currentEnemy.name} атакует вас на ${currentEnemy.attack}, но вы беспоследственно поглатили ${characterStats.defense}`, 'red')
 })
 
 document.getElementsByClassName('js-escape-btn')[0].addEventListener('click', () => {
-    if (currentEnemy.name){
-        switch (selectRandomEvent([0, 1, 2, 3])) {
-            case 0 : {
+    if (currentEnemy.name) {
+        const orderOfEvent = selectRandomEvent([0, 1, 2, 3])
+
+        switch (orderOfEvent) {
+            case 0: {
                 addLogText('Перед вами противник, вам не удалось сбежать, и вы теряете 5 единиц здоровья')
 
                 characterStats.health -= 5
                 break
             }
-            case 1 : {
+            case 1: {
                 addLogText('Перед вами противник, вам не удалось сбежать, и вы теряете 10 единиц здоровья')
 
                 characterStats.health -= 10
                 break
             }
-            case 2 : {
+            case 2: {
                 addLogText('Перед вами противник, вам не удалось сбежать, и вы теряете 15 единиц здоровья')
 
                 characterStats.health -= 15
                 break
             }
-            case 3 : {
+            case 3: {
                 addLogText('Перед вами противник, вам удалось сбежать, но вы теряете 15 единиц здоровья')
 
                 characterStats.health -= 15
@@ -415,4 +404,7 @@ document.getElementsByClassName('js-escape-btn')[0].addEventListener('click', ()
     changeCurrentLocation(locations)
 })
 
+document.getElementsByClassName('js-restart-btn')[0].addEventListener('click', () => window.location.reload())
+
+showModal()
 takeStartInfo(characterStats)

@@ -7,34 +7,46 @@
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<div class="game-container">
-    <div class="game-output">
-        <div class="game-container">
-            <div class="character-info">
-                <h2 class="js-character-name">Character Name</h2>
-                <p class="js-character-health">Health: 100</p>
-                <p class="js-character-attack">Attack: 10</p>
-                <p class="js-character-defense">Defense: 0</p>
-                <div class="inventory-wrapper">
-                    <div>Inventory:</div>
-                    <div class="js-character-inventory"></div>
-                </div>
-            </div>
-            <div class="location-info">
-                <h2 class="js-location-name">Location Name</h2>
-            </div>
-            <div class="actions">
-                <button class="js-explore-btn">Исследовать</button>
-                <button class="js-fight-btn">Атаковать</button>
-                <button class="js-collect-btn">Взять предмет</button>
-                <button class="js-escape-btn">Идти дальше</button>
-            </div>
-            <div class="log" id="log">
-                <p>Game log messages will appear here...</p>
-            </div>
+
+    <div class="modal" id="myModal">
+        <div class="modal-content">
+            <p>Введите ваше имя:</p>
+            <input type="text" id="userInput">
+            <button onclick="selectCharacterName()">OK</button>
         </div>
     </div>
-    <script src="./script.js" type="text/javascript"></script>
-</div>
+
+    <div class="game-container">
+        <div class="game-output">
+            <div class="game-container">
+                <div class="character-info">
+                    <h2 class="js-character-name">Character Name</h2>
+                    <p class="js-character-health">Health: 100</p>
+                    <p class="js-character-attack">Attack: 10</p>
+                    <p class="js-character-defense">Defense: 0</p>
+                    <div class="inventory-wrapper">
+                        <div>Inventory:</div>
+                        <div class="js-character-inventory"></div>
+                    </div>
+                </div>
+                <div class="location-info">
+                    <h2 class="js-location-name">Location Name</h2>
+                </div>
+                <div class="actions">
+                    <button class="js-explore-btn">Исследовать</button>
+                    <button class="js-fight-btn">Атаковать</button>
+                    <button class="js-collect-btn">Взять предмет</button>
+                    <button class="js-escape-btn">Идти дальше\Сбежать</button>
+                    <div class="restart">
+                        <button class="js-restart-btn" style="color: ;">Перезапуск</button>
+                    </div>
+                </div>
+                <div class="log" id="log">
+                    <p>Game log messages will appear here...</p>
+                </div>
+            </div>
+        </div>
+        <script src="./script.js" type="text/javascript"></script>
+    </div>
 </body>
 </html>
