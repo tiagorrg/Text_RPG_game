@@ -211,10 +211,9 @@ const updateCharacterInfo = (characterStats) => {
         characterHealth.innerHTML = `Health: 0`
 
         addLogText('Вы погибли')
-        alert('К сожалению ваш персонаж погиб')
 
-        var buttons = document.getElementsByTagName("button");
-        for (var i = 0; i < buttons.length; i++) {
+        const buttons = document.getElementsByTagName("button");
+        for (let i = 0; i < buttons.length; i++) {
             buttons[i].disabled = true;
             buttons[i].classList.add('disabled')
         }
